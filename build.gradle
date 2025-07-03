@@ -1,0 +1,45 @@
+plugins {
+    id 'java'
+    id 'maven-publish'
+    id 'jacoco'
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+group = 'com.boram'
+version = '0.1.0'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.jsoup:jsoup:1.17.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.0'
+    testImplementation("org.junit.jupiter:junit-jupiter:5.10.2")
+    compileOnly("org.projectlombok:lombok:1.18.30")
+    annotationProcessor("org.projectlombok:lombok:1.18.30")
+    testCompileOnly("org.projectlombok:lombok:1.18.30")
+    testAnnotationProcessor("org.projectlombok:lombok:1.18.30")
+    implementation 'net.sourceforge.tess4j:tess4j:5.4.0'
+    implementation 'com.github.jai-imageio:jai-imageio-core:1.4.0' // 이거 추가!
+    implementation 'org.slf4j:slf4j-simple:2.0.12'
+    implementation 'org.bytedeco:opencv-platform:4.9.0-1.5.10'
+}
+
+test {
+    useJUnitPlatform()
+    finalizedBy(tasks.jacocoTestReport) // 커버리지 리포트 생성
+    jvmArgs "-Djna.library.path=/opt/homebrew/lib"
+}
+
+tasks.jacocoTestReport {
+    dependsOn(tasks.test) // 테스트 후 리포트 생성
+    reports {
+        xml.required.set(true)
+        html.required.set(true)
+    }
+}
